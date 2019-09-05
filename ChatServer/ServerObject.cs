@@ -13,6 +13,7 @@ namespace ChatServer
         static TcpListener tcpListener; // сервер для прослушивания
         List<ClientObject> clients = new List<ClientObject>(); // все подключения
         List<string> UserName = new List<string>(); // все пользователи
+        List<string> ListTeams = new List<string>(); // все доступные команды бота
 
         /// <summary>
         /// Метод AddConnection добавляет клиент в коллекцию clients, тем самым подключает его к серверу.
@@ -31,6 +32,17 @@ namespace ChatServer
         protected internal void AddUserName(string userName)
         {
             UserName.Add(userName);
+        }
+
+        /// <summary>
+        /// Метод AddListTeams добавляет в список команд бота значения по умолчанию.
+        /// Они необходимы для ведения статистики. Так как в будущем зти команды будут храниться в базе данных, 
+        /// то для тестового задания подойдет этот вариант.
+        /// </summary>
+        protected internal void AddListTeams()
+        {
+            ListTeams.Add("#Список пользователей");
+            ListTeams.Add("#Завершить чат");
         }
 
         /// <summary>
@@ -124,16 +136,36 @@ namespace ChatServer
         /// Метод DataBaseClient выводит список пользователей на текущий момент
         /// </summary>
         /// <returns></returns>
-        protected internal string DataBaseClient()
+        protected internal string DataBaseClients()
         {
-            string dataBaseClient = null;
+            string dataBaseClients = null;
             
             foreach(var DB in UserName)
             {
-                dataBaseClient = dataBaseClient + DB + ",";
+                dataBaseClients = dataBaseClients + DB + ",";
             }
-            dataBaseClient = dataBaseClient.Remove(dataBaseClient.Length - 1);
-            return dataBaseClient;
+            dataBaseClients = dataBaseClients.Remove(dataBaseClients.Length - 1);
+            dataBaseClients = dataBaseClients + "...";
+
+            return dataBaseClients;
+        }
+
+        /// <summary>
+        /// Метод DataBaseTeams получает список доступных команд бота.
+        /// </summary>
+        /// <returns></returns>
+        protected internal string DataBaseTeams()
+        {
+            string dataBaseTeams = null;
+
+            foreach(var DB in ListTeams)
+            {
+                dataBaseTeams = dataBaseTeams + DB + ",";
+            }
+            dataBaseTeams = dataBaseTeams.Remove(dataBaseTeams.Length - 1);
+            dataBaseTeams = dataBaseTeams + "...";
+
+            return dataBaseTeams;
         }
 
         /// <summary>

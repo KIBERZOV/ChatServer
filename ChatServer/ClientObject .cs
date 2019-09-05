@@ -11,7 +11,7 @@ namespace ChatServer
         string userName;
         TcpClient client;
         ServerObject server; // объект сервера
-
+        
         /// <summary>
         /// У объекта ClientObject устанавливается свойство Id, которое уникально инидентифицирует, 
         /// и свойство Stream, хранящее поток для взаимодействия с клиентом. 
@@ -36,6 +36,9 @@ namespace ChatServer
         {
             try
             {
+                // загружаем список доступных команд
+                server.AddListTeams();
+
                 Stream = client.GetStream();
                 // получаем имя пользователя
                 string message = GetMessage();
@@ -56,8 +59,13 @@ namespace ChatServer
                         {
                             switch (message)
                             {
+                                case "#Список доступных команд":
+                                    message = String.Format("{0}: {1}", "#BOT", server.DataBaseTeams());
+                                    Console.WriteLine(message);
+                                    server.MessageToSender(message, this.Id);
+                                    break;
                                 case "#Список пользователей":
-                                    message = String.Format("{0}: {1}", "#BOT", server.DataBaseClient());
+                                    message = String.Format("{0}: {1}", "#BOT", server.DataBaseClients());
                                     Console.WriteLine(message);
                                     server.MessageToSender(message, this.Id);
                                     break;
